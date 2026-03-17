@@ -1,0 +1,94 @@
+spring:
+  application:
+    name: hardware-store-kafka
+
+  threads:
+    virtual:
+      enabled: true   # virtual threads for all listeners — cheaper I/O blocking
+
+  datasource:
+    url: jdbc:h2:mem:hardware_store;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+  kafka:
+    bootstrap-servers: localhost:29092
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+      properties:
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
+        linger.ms: 5
+        batch.size: 16384
+        compression.type: snappy
+
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      properties:
+        spring.json.trusted.packages: "com.example.hardware"
+        max.poll.records: 10
+        max.poll.interval.ms: 300000
+
+    listener:
+      ack-mode: manual_immediate
+      type: single
+
+# ── Topic Names ───────────────────────────────────────────────────────────────
+# Mapped to KafkaTopicsProperties via @ConfigurationProperties
+app:
+  kafka:
+    topics:
+      order-placed: order.placed
+      payment-result: payment.result
+      inventory-result: inventory.result
+      shipping-result: shipping.result
+      order-confirmed: order.confirmed
+      order-failed: order.failed
+      compensation: order.compensation
+      # DLTs — named explicitly for clear monitoring
+      order-placed-dlt: order.placed.DLT
+      payment-result-dlt: payment.result.DLT
+      inventory-result-dlt: inventory.result.DLT
+      shipping-result-dlt: shipping.result.DLT
+  notification:
+    sla-minutes: 5          # max time to send notification after order placed
+    scheduler-interval: 30000 # sweep every 30 seconds for overdue notifications
+
+# ── Notification SLA ──────────────────────────────────────────────────────────
+
+server:
+  port: 8082
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,kafkahealth
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    root: INFO
+    com.example.hardware: DEBUG
+    org.springframework.kafka: INFO
+    org.apache.kafka: WARN
