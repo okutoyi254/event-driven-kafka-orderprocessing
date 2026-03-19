@@ -2,6 +2,10 @@ package com.example.DistributedKafkaOrderProcessing.domain;
 
 import com.example.DistributedKafkaOrderProcessing.domain.enums.*;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -45,6 +49,17 @@ public final class Entities {
         @Column private Instant updatedAt;
         @Column private String failureReason;
 
+        public Order(String id, String customerId, String customerEmail, String customerPhone, List<OrderItem> items, BigDecimal totalAmount, String shippingAddress) {
+            this.id = id;
+            this.customerId = customerId;
+            this.customerEmail = customerEmail;
+            this.customerPhone = customerPhone;
+            this.items = items;
+            this.totalAmount = totalAmount;
+            this.shippingAddress = shippingAddress;
+
+        }
+
         public void updateStatus(OrderStatus status) {
             this.status = status;
             this.updatedAt = Instant.now();
@@ -68,18 +83,42 @@ public final class Entities {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class OrderItem{
+    public static class OrderItem {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        @Column(nullable = false) private String productId;
-        @Column(nullable = false) private String productName;
-        @Column(nullable = false) private String productCategory;
-        @Column(nullable = false) private int quantity;
-        @Column(nullable = false, precision = 10, scale = 2) private BigDecimal unitPrice;
-        @Column(nullable = false, precision = 10, scale = 2) private BigDecimal subtotal;
+        @Column(nullable = false)
+        private String productId;
+
+        public OrderItem( String productId, String productName, String productCategory, int quantity, BigDecimal unitPrice) {
+            this.productId = productId;
+            this.productName = productName;
+            this.productCategory = productCategory;
+            this.quantity = quantity;
+            this.unitPrice = unitPrice;
+        }
+
+        @Column(nullable = false)
+        private String productName;
+        @Column(nullable = false)
+        private String productCategory;
+        @Column(nullable = false)
+        private int quantity;
+        @Column(nullable = false, precision = 10, scale = 2)
+        private BigDecimal unitPrice;
+        @Column(nullable = false, precision = 10, scale = 2)
+        private BigDecimal subtotal;
+
+        public OrderItem( String productId, String productName, String productCategory, int quantity, BigDecimal unitPrice, BigDecimal subtotal) {
+            this.productId = productId;
+            this.productName = productName;
+            this.productCategory = productCategory;
+            this.quantity = quantity;
+            this.unitPrice = unitPrice;
+            this.subtotal = subtotal;
+        }
     }
 
 
