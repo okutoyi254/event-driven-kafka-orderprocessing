@@ -1,15 +1,15 @@
 package com.example.DistributedKafkaOrderProcessing.inventory;
 
-import com.example.DistributedKafkaOrderProcessing.domain.Entities;
+import com.example.DistributedKafkaOrderProcessing.domain.entities.InventoryReservation;
 import com.example.DistributedKafkaOrderProcessing.domain.enums.InventoryStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 @Repository
-public interface InventoryReservationRepository extends JpaRepository<Entities.InventoryReservation,Long> {
+public interface InventoryReservationRepository extends JpaRepository<InventoryReservation,Long> {
 
-    List<Entities.InventoryReservation> findByOrderId(String orderId);
+    List<InventoryReservation> findByOrderId(String orderId);
 
-    List<Entities.InventoryReservation> findByOrderIdAndStatus(String orderId, InventoryStatus status);
+    List<InventoryReservation> findByOrderIdAndStatus(String orderId, InventoryStatus status);
 }

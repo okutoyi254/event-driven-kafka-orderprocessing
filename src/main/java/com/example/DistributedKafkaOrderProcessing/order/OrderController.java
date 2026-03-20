@@ -1,7 +1,8 @@
 package com.example.DistributedKafkaOrderProcessing.order;
 
 
-import com.example.DistributedKafkaOrderProcessing.domain.Entities;
+
+import com.example.DistributedKafkaOrderProcessing.domain.entities.Order;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,7 @@ public class OrderController {
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderDtos.OrderStatusResponse> getOrder(@PathVariable String orderId) {
         log.info("GET /api/orders/{}", orderId);
-        Entities.Order order = orderService.getOrder(orderId);
+        Order order = orderService.getOrder(orderId);
         return ResponseEntity.ok(toStatusResponse(order));
     }
 
@@ -151,7 +152,7 @@ public class OrderController {
 
     // ── Mapper ────────────────────────────────────────────────────────────────
 
-    private OrderDtos.OrderStatusResponse toStatusResponse(Entities.Order order) {
+    private OrderDtos.OrderStatusResponse toStatusResponse(Order order) {
         List<OrderDtos.OrderItemResponse> itemResponses = order.getItems().stream()
                 .map(i -> new OrderDtos.OrderItemResponse(
                         i.getProductId(), i.getProductName(), i.getProductCategory(),

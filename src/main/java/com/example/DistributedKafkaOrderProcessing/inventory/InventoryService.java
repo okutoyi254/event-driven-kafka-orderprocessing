@@ -1,8 +1,10 @@
 package com.example.DistributedKafkaOrderProcessing.inventory;
 
-import com.example.DistributedKafkaOrderProcessing.domain.Entities;
+import com.example.DistributedKafkaOrderProcessing.domain.entities.InventoryItem;
+import com.example.DistributedKafkaOrderProcessing.domain.entities.InventoryReservation;
 import com.example.DistributedKafkaOrderProcessing.domain.enums.InventoryStatus;
 import com.example.DistributedKafkaOrderProcessing.domain.events.Events;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -36,7 +38,7 @@ public class InventoryService {
 
 //        Check availability for all items ordered
         for(Events.OrderItem item: items){
-            Entities.InventoryItem stock= itemRepository
+            InventoryItem stock= itemRepository
                     .findByIdForUpdate(item.productId())
                     .orElse(null);
 
@@ -68,14 +70,14 @@ public class InventoryService {
 
         // All available → reserve all
         for (Events.OrderItem item : items) {
-            Entities.InventoryItem stock = itemRepository
+            InventoryItem stock = itemRepository
                     .findByIdForUpdate(item.productId())
                     .orElseThrow();
 
             stock.reserve(item.quantity());
             itemRepository.save(stock);
 
-            Entities.InventoryReservation reservation = new Entities.InventoryReservation(
+            InventoryReservation reservation = new InventoryReservation(
                     paymentEvent.orderId(),
                     item.productId(),
                     item.productName(),

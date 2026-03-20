@@ -1,6 +1,6 @@
 package com.example.DistributedKafkaOrderProcessing.payment;
 
-import com.example.DistributedKafkaOrderProcessing.domain.Entities;
+import com.example.DistributedKafkaOrderProcessing.domain.entities.Payment;
 import com.example.DistributedKafkaOrderProcessing.domain.enums.PaymentStatus;
 import com.example.DistributedKafkaOrderProcessing.domain.events.Events;
 import jakarta.transaction.Transactional;
@@ -59,7 +59,7 @@ public class PaymentService {
         }
 
         // ── Save payment record ───────────────────────────────────────────────
-        Entities.Payment payment = new Entities.Payment(
+        Payment payment = new Payment(
                 event.orderId(),
                 event.customerId(),
                 transactionId,
