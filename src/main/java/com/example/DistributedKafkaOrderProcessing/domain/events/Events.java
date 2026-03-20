@@ -1,6 +1,5 @@
 package com.example.DistributedKafkaOrderProcessing.domain.events;
 
-import com.example.DistributedKafkaOrderProcessing.domain.Entities;
 import com.example.DistributedKafkaOrderProcessing.domain.enums.InventoryStatus;
 import com.example.DistributedKafkaOrderProcessing.domain.enums.PaymentStatus;
 import com.example.DistributedKafkaOrderProcessing.domain.enums.ShippingStatus;

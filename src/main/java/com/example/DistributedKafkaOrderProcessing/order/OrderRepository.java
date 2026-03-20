@@ -1,6 +1,6 @@
 package com.example.DistributedKafkaOrderProcessing.order;
 
-import com.example.DistributedKafkaOrderProcessing.domain.Entities;
+import com.example.DistributedKafkaOrderProcessing.domain.entities.Order;
 import com.example.DistributedKafkaOrderProcessing.domain.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,11 +8,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OrderRepository extends JpaRepository<Entities.Order,String> {
+public interface OrderRepository extends JpaRepository<Order,String> {
 
-    List<Entities.Order> findByCustomerId(String customerId);
+    List<Order> findByCustomerId(String customerId);
 
-    List<Entities.Order> findByStatus(OrderStatus status);
+    List<Order> findByStatus(OrderStatus status);
 
-    List<Entities.Order> findByCustomerIdOrderByPlacedAtDesc(String customerId);
+    List<Order> findByCustomerIdOrderByPlacedAtDesc(String customerId);
 }

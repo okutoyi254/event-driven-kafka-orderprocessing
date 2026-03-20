@@ -1,6 +1,6 @@
 package com.example.DistributedKafkaOrderProcessing.order;
 
-import com.example.DistributedKafkaOrderProcessing.domain.Entities;
+import com.example.DistributedKafkaOrderProcessing.domain.entities.ProcessedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,13 +24,13 @@ public class IdempotencyService {
             log.warn("⚠️  Duplicate event skipped: eventId={} group={}", eventId, consumerGroup);
             return true;
         }
-        repository.save(new Entities.ProcessedEvent(eventId, consumerGroup));
+        repository.save(new ProcessedEvent(eventId, consumerGroup));
         return false;
     }
 }
 
 @Repository
-interface ProcessedEventRepository extends JpaRepository<Entities.ProcessedEvent, Long> {
+interface ProcessedEventRepository extends JpaRepository<ProcessedEvent, Long> {
     boolean existsByEventIdAndConsumerGroup(String eventId, String consumerGroup);
 }
 

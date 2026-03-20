@@ -1,8 +1,10 @@
 package com.example.DistributedKafkaOrderProcessing.order;
 
-import com.example.DistributedKafkaOrderProcessing.domain.Entities;
+import com.example.DistributedKafkaOrderProcessing.domain.entities.Order;
+import com.example.DistributedKafkaOrderProcessing.domain.entities.OrderItem;
 import com.example.DistributedKafkaOrderProcessing.domain.enums.OrderStatus;
 import com.example.DistributedKafkaOrderProcessing.domain.events.Events;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,8 +33,8 @@ public class OrderService {
         log.info("Placing order for customer: {}", request.customerId());
 
         // Build items
-        List<Entities.OrderItem> items = request.items().stream()
-                .map(i -> new Entities.OrderItem(
+        List<OrderItem> items = request.items().stream()
+                .map(i -> new OrderItem(
                         i.productId(), i.productName(), i.productCategory(),
                         i.quantity(), i.unitPrice()
                 ))
@@ -40,12 +42,12 @@ public class OrderService {
 
         // Calculate total
         BigDecimal total = items.stream()
-                .map(Entities.OrderItem::getSubtotal)
+                .map(OrderItem::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         // Persist as PENDING
         String orderId = UUID.randomUUID().toString();
-        Entities.Order order = new Entities.Order(
+        Order order = new Order(
                 orderId,
                 request.customerId(),
                 request.customerEmail(),
@@ -122,18 +124,18 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Entities.Order getOrder(String orderId) {
+    public Order getOrder(String orderId) {
         return orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
     }
 
     @Transactional(readOnly = true)
-    public List<Entities.Order> getOrdersByCustomer(String customerId) {
+    public List<Order> getOrdersByCustomer(String customerId) {
         return orderRepository.findByCustomerIdOrderByPlacedAtDesc(customerId);
     }
 
     @Transactional(readOnly = true)
-    public List<Entities.Order> getAllOrders() {
+    public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
 
