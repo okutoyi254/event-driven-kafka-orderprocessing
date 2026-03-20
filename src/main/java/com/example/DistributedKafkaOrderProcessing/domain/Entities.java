@@ -165,7 +165,7 @@ public final class Entities {
     @NoArgsConstructor
     @Data
     @Table(name = "inventory_items")
-    private static class InventoryItem{
+    public static class InventoryItem{
 
         @Id
         private String productId;
