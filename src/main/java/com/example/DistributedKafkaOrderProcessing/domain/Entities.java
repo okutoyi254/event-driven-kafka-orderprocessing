@@ -146,13 +146,26 @@ public final class Entities {
         @Column(nullable = false) private Instant processedAt;
         @Column private Instant refundedAt;
 
+        public Payment(String orderId, String customerId, String transactionId, PaymentStatus status, BigDecimal amount, String failureReason) {
+            this.orderId = orderId;
+            this.customerId = customerId;
+            this.transactionId = transactionId;
+            this.status = status;
+            this.amount = amount;
+            this.failureReason = failureReason;
+        }
+
+        public void refund() {
+            this.status = PaymentStatus.REFUNDED;
+            this.refundedAt = Instant.now();
+        }
     }
 
     @Entity
     @NoArgsConstructor
     @Data
     @Table(name = "inventory_items")
-    private static class InventoryItem{
+    public static class InventoryItem{
 
         @Id
         private String productId;
