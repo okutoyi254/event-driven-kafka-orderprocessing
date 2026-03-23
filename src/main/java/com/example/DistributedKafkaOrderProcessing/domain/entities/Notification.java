@@ -3,10 +3,12 @@ package com.example.DistributedKafkaOrderProcessing.domain.entities;
 import com.example.DistributedKafkaOrderProcessing.domain.enums.NotificationStatus;
 import com.example.DistributedKafkaOrderProcessing.domain.enums.NotificationType;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.Instant;
 
 @Entity
+@Data
 @Table(name = "notifications")
 public  class Notification{
 
