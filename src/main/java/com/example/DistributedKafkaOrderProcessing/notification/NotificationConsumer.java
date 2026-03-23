@@ -55,7 +55,7 @@ public class NotificationConsumer {
     }
 
     @KafkaListener(
-            topics = "${app.kafka.tpoics.payment-result}",
+            topics = "${app.kafka.topics.payment-result}",
             groupId = GROUP,
             concurrency = "3"
     )
