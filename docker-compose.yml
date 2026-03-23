@@ -1,18 +1,4 @@
 
-# ── How listeners work in this setup ──────────────────────────────────────────
-#
-#   PLAINTEXT          → kafka:9092    (internal Docker network)
-#                        Used by: kafka-ui, schema-registry, order-app container
-#
-#   PLAINTEXT_HOST     → localhost:29092  (mapped to your host machine)
-#                        Used by: your Spring app when running locally (not in Docker)
-#                                 CLI tools: kafka-console-producer, kafka-topics, etc.
-#
-# So:
-#   App running on HOST machine  → bootstrap-servers: localhost:29092
-#   App running IN Docker        → bootstrap-servers: kafka:9092  (via env override)
-# ──────────────────────────────────────────────────────────────────────────────
-
 services:
 
   kafka:
@@ -94,7 +80,7 @@ services:
     restart: unless-stopped
 
   #   ── Uncomment to run your Spring app inside Docker too ─────────────────────
-  order-app:
+  hardware-order-app:
     build:
       context: .
       dockerfile: Dockerfile

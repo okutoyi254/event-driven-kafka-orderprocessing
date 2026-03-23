@@ -19,5 +19,12 @@ target/
 *.iml
 *.ipr
 
+.m2/
+
+Dockerfile
+.dockerignore
+docker/
+
+docker-compose.yml
 
 
