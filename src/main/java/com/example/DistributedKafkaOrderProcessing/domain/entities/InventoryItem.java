@@ -4,12 +4,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
-@Data
 @Table(name = "inventory_items")
 public  class InventoryItem{
 
@@ -41,5 +39,21 @@ public  class InventoryItem{
     public void release(int quantity){
         this.quantityReserved = Math.max(0,this.quantityReserved- quantity);
     }
+
+    // Getters
+    public String getProductId() { return productId; }
+    public String getProductName() { return productName; }
+    public String getCategory() { return category; }
+    public int getQuantityAvailable() { return quantityAvailable; }
+    public int getQuantityReserved() { return quantityReserved; }
+    public String getWarehouseLocation() { return warehouseLocation; }
+
+    // Setters
+    public void setProductId(String productId) { this.productId = productId; }
+    public void setProductName(String productName) { this.productName = productName; }
+    public void setCategory(String category) { this.category = category; }
+    public void setQuantityAvailable(int quantityAvailable) { this.quantityAvailable = quantityAvailable; }
+    public void setQuantityReserved(int quantityReserved) { this.quantityReserved = quantityReserved; }
+    public void setWarehouseLocation(String warehouseLocation) { this.warehouseLocation = warehouseLocation; }
 }
 
