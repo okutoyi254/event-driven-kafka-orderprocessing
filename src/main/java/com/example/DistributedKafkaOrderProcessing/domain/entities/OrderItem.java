@@ -1,15 +1,11 @@
 package com.example.DistributedKafkaOrderProcessing.domain.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_items")
-@AllArgsConstructor
-@NoArgsConstructor
 public class OrderItem {
 
     @Id
@@ -18,6 +14,9 @@ public class OrderItem {
 
     @Column(nullable = false)
     private String productId;
+
+    // No-args constructor
+    protected OrderItem() {}
 
     public OrderItem( String productId, String productName, String productCategory, int quantity, BigDecimal unitPrice) {
         this.productId = productId;

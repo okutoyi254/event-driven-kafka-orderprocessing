@@ -4,10 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
 @Table(name = "inventory_items")
 public  class InventoryItem{
 
@@ -29,6 +27,11 @@ public  class InventoryItem{
         this.quantityReserved= 0;
         this.warehouseLocation=warehouseLocation;
     }
+
+    public InventoryItem() {
+
+    }
+
     public boolean canReserve(int quantity){
         return (quantityAvailable- quantityReserved)>= quantity;
     }
@@ -56,4 +59,3 @@ public  class InventoryItem{
     public void setQuantityReserved(int quantityReserved) { this.quantityReserved = quantityReserved; }
     public void setWarehouseLocation(String warehouseLocation) { this.warehouseLocation = warehouseLocation; }
 }
-

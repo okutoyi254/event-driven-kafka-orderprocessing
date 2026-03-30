@@ -2,15 +2,11 @@ package com.example.DistributedKafkaOrderProcessing.domain.entities;
 
 import com.example.DistributedKafkaOrderProcessing.domain.enums.OrderStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "orders")
 public  class Order{
@@ -49,6 +45,10 @@ public  class Order{
         this.items = items;
         this.totalAmount = totalAmount;
         this.shippingAddress = shippingAddress;
+
+    }
+
+    public Order() {
 
     }
 
