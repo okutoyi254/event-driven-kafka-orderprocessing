@@ -2,14 +2,10 @@ package com.example.DistributedKafkaOrderProcessing.domain.entities;
 
 import com.example.DistributedKafkaOrderProcessing.domain.enums.PaymentStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "payments")
 public  class  Payment{
@@ -40,6 +36,10 @@ public  class  Payment{
         this.failureReason = failureReason;
     }
 
+    public Payment() {
+
+    }
+
     public void refund() {
         this.status = PaymentStatus.REFUNDED;
         this.refundedAt = Instant.now();
@@ -67,4 +67,3 @@ public  class  Payment{
     public void setProcessedAt(Instant processedAt) { this.processedAt = processedAt; }
     public void setRefundedAt(Instant refundedAt) { this.refundedAt = refundedAt; }
 }
-

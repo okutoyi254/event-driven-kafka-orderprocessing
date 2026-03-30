@@ -23,7 +23,12 @@ spring:
     show-sql: false
 
   kafka:
-    bootstrap-servers: localhost:29092
+    bootstrap-servers: localhost:9092
+    admin:
+      properties:
+        request.timeout.ms: 30000
+        retry.backoff.ms: 1000
+        retries: 10
 
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -75,7 +80,7 @@ app:
 # ── Notification SLA ──────────────────────────────────────────────────────────
 
 server:
-  port: 8084
+  port: 8085
 
 management:
   endpoints:
