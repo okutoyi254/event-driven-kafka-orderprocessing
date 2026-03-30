@@ -3,12 +3,10 @@ package com.example.DistributedKafkaOrderProcessing.domain.entities;
 
 import com.example.DistributedKafkaOrderProcessing.domain.enums.InventoryStatus;
 import jakarta.persistence.*;
-import lombok.Data;
 
 import java.time.Instant;
 
 @Entity
-@Data
 @Table(name = "inventory_reservations")
 public  class InventoryReservation{
 
@@ -47,5 +45,26 @@ public  class InventoryReservation{
         this.releasedAt = Instant.now();
     }
 
+    // Getters
+    public Long getId() { return id; }
+    public String getOrderId() { return orderId; }
+    public String getProductId() { return productId; }
+    public String getProductName() { return productName; }
+    public int getQuantityReserved() { return quantityReserved; }
+    public String getWarehouseLocation() { return warehouseLocation; }
+    public InventoryStatus getStatus() { return status; }
+    public Instant getReservedAt() { return reservedAt; }
+    public Instant getReleasedAt() { return releasedAt; }
+
+    // Setters
+    public void setId(Long id) { this.id = id; }
+    public void setOrderId(String orderId) { this.orderId = orderId; }
+    public void setProductId(String productId) { this.productId = productId; }
+    public void setProductName(String productName) { this.productName = productName; }
+    public void setQuantityReserved(int quantityReserved) { this.quantityReserved = quantityReserved; }
+    public void setWarehouseLocation(String warehouseLocation) { this.warehouseLocation = warehouseLocation; }
+    public void setStatus(InventoryStatus status) { this.status = status; }
+    public void setReservedAt(Instant reservedAt) { this.reservedAt = reservedAt; }
+    public void setReleasedAt(Instant releasedAt) { this.releasedAt = releasedAt; }
 }
 

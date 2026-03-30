@@ -75,7 +75,7 @@ app:
 # ── Notification SLA ──────────────────────────────────────────────────────────
 
 server:
-  port: 8082
+  port: 8084
 
 management:
   endpoints:

@@ -3,14 +3,12 @@ package com.example.DistributedKafkaOrderProcessing.domain.entities;
 import com.example.DistributedKafkaOrderProcessing.domain.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -70,4 +68,32 @@ public  class Order{
         this.failureReason = reason;
         this.updatedAt = Instant.now();
     }
+
+    // Getters
+    public String getId() { return id; }
+    public String getCustomerId() { return customerId; }
+    public String getCustomerEmail() { return customerEmail; }
+    public String getCustomerPhone() { return customerPhone; }
+    public List<OrderItem> getItems() { return items; }
+    public String getShippingAddress() { return shippingAddress; }
+    public BigDecimal getTotalAmount() { return totalAmount; }
+    public OrderStatus getStatus() { return status; }
+    public Instant getPlacedAt() { return placedAt; }
+    public Instant getConfirmedAt() { return confirmedAt; }
+    public Instant getUpdatedAt() { return updatedAt; }
+    public String getFailureReason() { return failureReason; }
+
+    // Setters
+    public void setId(String id) { this.id = id; }
+    public void setCustomerId(String customerId) { this.customerId = customerId; }
+    public void setCustomerEmail(String customerEmail) { this.customerEmail = customerEmail; }
+    public void setCustomerPhone(String customerPhone) { this.customerPhone = customerPhone; }
+    public void setItems(List<OrderItem> items) { this.items = items; }
+    public void setShippingAddress(String shippingAddress) { this.shippingAddress = shippingAddress; }
+    public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
+    public void setStatus(OrderStatus status) { this.status = status; }
+    public void setPlacedAt(Instant placedAt) { this.placedAt = placedAt; }
+    public void setConfirmedAt(Instant confirmedAt) { this.confirmedAt = confirmedAt; }
+    public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
+    public void setFailureReason(String failureReason) { this.failureReason = failureReason; }
 }

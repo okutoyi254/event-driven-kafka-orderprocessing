@@ -2,14 +2,12 @@ package com.example.DistributedKafkaOrderProcessing.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_items")
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderItem {
@@ -48,6 +46,22 @@ public class OrderItem {
         this.unitPrice = unitPrice;
         this.subtotal = subtotal;
     }
+
+    // Getters
+    public Long getId() { return id; }
+    public String getProductId() { return productId; }
+    public String getProductName() { return productName; }
+    public String getProductCategory() { return productCategory; }
+    public int getQuantity() { return quantity; }
+    public BigDecimal getUnitPrice() { return unitPrice; }
+    public BigDecimal getSubtotal() { return subtotal; }
+
+    // Setters
+    public void setId(Long id) { this.id = id; }
+    public void setProductId(String productId) { this.productId = productId; }
+    public void setProductName(String productName) { this.productName = productName; }
+    public void setProductCategory(String productCategory) { this.productCategory = productCategory; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public void setUnitPrice(BigDecimal unitPrice) { this.unitPrice = unitPrice; }
+    public void setSubtotal(BigDecimal subtotal) { this.subtotal = subtotal; }
 }
-
-
