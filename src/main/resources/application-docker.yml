@@ -23,7 +23,12 @@ spring:
     show-sql: false
 
   kafka:
-    bootstrap-servers: localhost:29092
+    bootstrap-servers: localhost:9092
+    admin:
+      properties:
+        request.timeout.ms: 30000
+        retry.backoff.ms: 1000
+        retries: 10
 
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -50,6 +55,7 @@ spring:
     listener:
       ack-mode: manual_immediate
       type: single
+      auto-startup: false
 
 # ── Topic Names ───────────────────────────────────────────────────────────────
 # Mapped to KafkaTopicsProperties via @ConfigurationProperties
@@ -74,8 +80,13 @@ app:
 
 # ── Notification SLA ──────────────────────────────────────────────────────────
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/index.html
+    operationsSorter: alpha
+
 server:
-  port: 8082
+  port: 8085
 
 management:
   endpoints:

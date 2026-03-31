@@ -64,5 +64,35 @@ public  class Notification{
         this.status = NotificationStatus.FAILED;
         this.retryCount++;
     }
+
+    // Getters
+    public Long getId() { return id; }
+    public String getOrderId() { return orderId; }
+    public String getCustomerId() { return customerId; }
+    public String getCustomerEmail() { return customerEmail; }
+    public String getCustomerPhone() { return customerPhone; }
+    public NotificationType getType() { return type; }
+    public NotificationStatus getStatus() { return status; }
+    public String getSubject() { return subject; }
+    public String getMessage() { return message; }
+    public Instant getDeadline() { return deadline; }
+    public Instant getCreatedAt() { return createdAt; }
+    public Instant getSentAt() { return sentAt; }
+    public int getRetryCount() { return retryCount; }
+
+    // Setters
+    public void setId(Long id) { this.id = id; }
+    public void setOrderId(String orderId) { this.orderId = orderId; }
+    public void setCustomerId(String customerId) { this.customerId = customerId; }
+    public void setCustomerEmail(String customerEmail) { this.customerEmail = customerEmail; }
+    public void setCustomerPhone(String customerPhone) { this.customerPhone = customerPhone; }
+    public void setType(NotificationType type) { this.type = type; }
+    public void setStatus(NotificationStatus status) { this.status = status; }
+    public void setSubject(String subject) { this.subject = subject; }
+    public void setMessage(String message) { this.message = message; }
+    public void setDeadline(Instant deadline) { this.deadline = deadline; }
+    public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
+    public void setSentAt(Instant sentAt) { this.sentAt = sentAt; }
+    public void setRetryCount(int retryCount) { this.retryCount = retryCount; }
 }
 

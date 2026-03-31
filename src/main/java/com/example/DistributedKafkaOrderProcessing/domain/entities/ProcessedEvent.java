@@ -1,14 +1,10 @@
 package com.example.DistributedKafkaOrderProcessing.domain.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.Instant;
 
 //    Idempotency
-@Getter
-@Setter
 @Entity
 @Table(name = "processed_events",
         uniqueConstraints = @UniqueConstraint(columnNames = {"eventId","consumerGroup"}))
@@ -30,4 +26,15 @@ public  class ProcessedEvent{
         this.processedAt = Instant.now();
     }
 
+    // Getters
+    public Long getId() { return id; }
+    public String getEventId() { return eventId; }
+    public String getConsumerGroup() { return consumerGroup; }
+    public Instant getProcessedAt() { return processedAt; }
+
+    // Setters
+    public void setId(Long id) { this.id = id; }
+    public void setEventId(String eventId) { this.eventId = eventId; }
+    public void setConsumerGroup(String consumerGroup) { this.consumerGroup = consumerGroup; }
+    public void setProcessedAt(Instant processedAt) { this.processedAt = processedAt; }
 }
