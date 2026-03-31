@@ -55,6 +55,7 @@ spring:
     listener:
       ack-mode: manual_immediate
       type: single
+      auto-startup: false
 
 # ── Topic Names ───────────────────────────────────────────────────────────────
 # Mapped to KafkaTopicsProperties via @ConfigurationProperties
@@ -78,6 +79,11 @@ app:
     scheduler-interval: 30000 # sweep every 30 seconds for overdue notifications
 
 # ── Notification SLA ──────────────────────────────────────────────────────────
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/index.html
+    operationsSorter: alpha
 
 server:
   port: 8085
