@@ -40,11 +40,15 @@ public class OrderService {
                 ))
                 .collect(Collectors.toList());
 
-        // Calculate total
         BigDecimal total = items.stream()
-                .map(OrderItem::getSubtotal)
+                .map(item -> {
+                    if (item.getSubtotal() == null) {
+                        System.out.println("Warning: Item subtotal is null! Item ID: " + item.getId());
+                        return BigDecimal.ZERO;
+                    }
+                    return item.getSubtotal();
+                })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
         // Persist as PENDING
         String orderId = UUID.randomUUID().toString();
         Order order = new Order(
