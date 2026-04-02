@@ -1,0 +1,31 @@
+app:
+  kafka:
+    topics:
+      order-placed: order.placed
+      payment-result: payment.result
+      inventory-result: inventory.result
+      shipping-result: shipping.result
+      order-confirmed: order.confirmed
+      order-failed: order.failed
+      compensation: order.compensation
+      # DLTs — named explicitly for clear monitoring
+      order-placed-dlt: order.placed.DLT
+      payment-result-dlt: payment.result.DLT
+      inventory-result-dlt: inventory.result.DLT
+      shipping-result-dlt: shipping.result.DLT
+  notification:
+    sla-minutes: 5          # max time to send notification after order placed
+    scheduler-interval: 30000 # sweep every 30 seconds for overdue notifications
+
+# Kafka settings for tests: use JSON serializer/deserializer so we can send POJOs
+spring:
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
