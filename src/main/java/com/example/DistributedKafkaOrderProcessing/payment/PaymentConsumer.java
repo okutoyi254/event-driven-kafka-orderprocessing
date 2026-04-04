@@ -48,8 +48,8 @@ public class PaymentConsumer {
             Acknowledgment ack
             )
     {
-        log.info("[payment-service] OrderPlacedEvent: orderId={} amount={} partition={}",
-                event.orderId(),event.totalAmount(),partition);
+        log.info("[payment-service] 🚀 HANDLER INVOKED! OrderPlacedEvent: orderId={} amount={} partition={} offset={}",
+                event.orderId(),event.totalAmount(),partition,offset);
 
 //        Idempotency
         if(idempotencyService.alreadyProcessed(event.eventId(), GROUP)){
@@ -139,4 +139,3 @@ public class PaymentConsumer {
             ack.acknowledge();
         }
     }
-

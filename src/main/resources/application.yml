@@ -1,3 +1,110 @@
 spring:
-  profiles:
-    active: docker
+  application:
+    name: hardware-store-kafka
+
+  threads:
+    virtual:
+      enabled: true
+
+  datasource:
+    url: jdbc:h2:mem:hardware_store;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+  kafka:
+    bootstrap-servers: localhost:29092
+
+    admin:
+      properties:
+        request.timeout.ms: 30000
+        retry.backoff.ms: 1000
+        retries: 10
+      fail-fast: false   # don't crash on startup if Kafka not yet ready
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+      properties:
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
+        linger.ms: 5
+        batch.size: 16384
+        compression.type: snappy
+        spring.json.add.type.headers: true
+
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.use.type.headers: true
+        max.poll.records: 10
+        max.poll.interval.ms: 300000
+
+    listener:
+      ack-mode: manual_immediate   # commit immediately after ack.acknowledge()
+      type: single                 # one record per listener invocation
+      # auto-startup NOT set here — defaults to true (consumers start normally)
+
+# ── Topic Names ───────────────────────────────────────────────────────────────
+# Single app: block — duplicate keys in YAML silently overwrite each other
+app:
+  kafka:
+    topics:
+      order-placed: order.placed
+      payment-result: payment.result
+      inventory-result: inventory.result
+      shipping-result: shipping.result
+      order-confirmed: order.confirmed
+      order-failed: order.failed
+      compensation: order.compensation
+      order-placed-dlt: order.placed.DLT
+      payment-result-dlt: payment.result.DLT
+      inventory-result-dlt: inventory.result.DLT
+      shipping-result-dlt: shipping.result.DLT
+  notification:
+    sla-minutes: 5
+    scheduler-interval: 30000
+
+# ── API Docs ──────────────────────────────────────────────────────────────────
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/index.html
+    operationsSorter: alpha
+
+# ── Server ────────────────────────────────────────────────────────────────────
+server:
+  port: 8082
+
+# ── Actuator ─────────────────────────────────────────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# ── Logging ───────────────────────────────────────────────────────────────────
+logging:
+  level:
+    root: INFO
+    com.example.DistributedKafkaOrderProcessing: DEBUG
+    org.springframework.kafka: INFO
+    org.apache.kafka: WARN
