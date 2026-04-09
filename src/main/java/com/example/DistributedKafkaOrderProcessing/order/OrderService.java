@@ -32,19 +32,24 @@ public class OrderService {
     public OrderDtos.PlaceOrderResponse placeOrder(OrderDtos.PlaceOrderRequest request) {
         log.info("Placing order for customer: {}", request.customerId());
 
-        // Build items
+        // Build items (ensure subtotal is set to satisfy DB constraints)
         List<OrderItem> items = request.items().stream()
                 .map(i -> new OrderItem(
                         i.productId(), i.productName(), i.productCategory(),
-                        i.quantity(), i.unitPrice()
+                        i.quantity(), i.unitPrice(),
+                        i.unitPrice().multiply(java.math.BigDecimal.valueOf(i.quantity()))
                 ))
                 .collect(Collectors.toList());
 
-        // Calculate total
         BigDecimal total = items.stream()
-                .map(OrderItem::getSubtotal)
+                .map(item -> {
+                    if (item.getSubtotal() == null) {
+                        System.out.println("Warning: Item subtotal is null! Item ID: " + item.getId());
+                        return BigDecimal.ZERO;
+                    }
+                    return item.getSubtotal();
+                })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
         // Persist as PENDING
         String orderId = UUID.randomUUID().toString();
         Order order = new Order(
@@ -56,6 +61,9 @@ public class OrderService {
                 total,
                 request.shippingAddress()
         );
+        // Ensure required fields are set before persisting
+        order.setStatus(OrderStatus.PENDING);
+        order.setPlacedAt(java.time.Instant.now());
         orderRepository.save(order);
         log.info("Order saved as PENDING: orderId={} total={}", orderId, total);
 
