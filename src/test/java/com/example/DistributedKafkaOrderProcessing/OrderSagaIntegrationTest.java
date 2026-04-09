@@ -9,9 +9,11 @@ import com.example.DistributedKafkaOrderProcessing.order.OrderRepository;
 import com.example.DistributedKafkaOrderProcessing.order.OrderService;
 import com.example.DistributedKafkaOrderProcessing.payment.PaymentRepository;
 import org.awaitility.Awaitility;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,6 +32,19 @@ class OrderSagaIntegrationTest {
     @Autowired private PaymentRepository paymentRepository;
     @Autowired private NotificationRepository notificationRepository;
 
+    @Autowired
+    private KafkaListenerEndpointRegistry registry;
+
+    @BeforeEach
+    void debugKafkaListeners() {
+        System.out.println("=== Kafka Listeners Status ===");
+        registry.getListenerContainers().forEach(container -> {
+            System.out.println("Listener ID: " + container.getListenerId() +
+                    " | Active: " + container.isRunning() +
+                    " | Paused: " + container.isPauseRequested() +
+                    " | Topics: " + container.getContainerProperties().getTopics());
+        });
+    }
     // ── Test fixtures ─────────────────────────────────────────────────────────
 
     private OrderDtos.PlaceOrderRequest drillOrder() {
@@ -103,13 +118,13 @@ class OrderSagaIntegrationTest {
 
         // The saga runs asynchronously via Kafka — poll until terminal state
         Awaitility.await()
-                .atMost(60, TimeUnit.SECONDS)
-                .pollInterval(500, TimeUnit.MILLISECONDS)
+                .atMost(60, TimeUnit.SECONDS)           // increased
+                .pollInterval(1, TimeUnit.SECONDS)
                 .untilAsserted(() -> {
                     var order = orderRepository.findById(orderId).orElseThrow();
+                    System.out.println("Current status: " + order.getStatus()); // important
                     assertThat(order.getStatus())
-                            .as("Order should reach CONFIRMED or FAILED, not stay in %s",
-                                    order.getStatus())
+                            .as("Order should reach terminal state")
                             .isIn(OrderStatus.CONFIRMED, OrderStatus.PAYMENT_FAILED,
                                     OrderStatus.INVENTORY_FAILED, OrderStatus.SHIPPING_FAILED);
                 });
