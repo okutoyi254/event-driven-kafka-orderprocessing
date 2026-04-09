@@ -34,6 +34,7 @@ public  class  Payment{
         this.status = status;
         this.amount = amount;
         this.failureReason = failureReason;
+        this.processedAt= Instant.now();
     }
 
     public Payment() {

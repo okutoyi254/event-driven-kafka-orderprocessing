@@ -31,8 +31,6 @@ public class PaymentService {
         // ── Simulate gateway call ─────────────────────────────────────────────
         int outcome = random.nextInt(10);
 
-        // 10% chance → transient gateway timeout
-        // These are retried by DefaultErrorHandler (1s → 2s → 4s → DLT)
         if (outcome == 0) {
             throw new PaymentGatewayTimeoutException(
                     "Payment gateway timeout for order: " + event.orderId());

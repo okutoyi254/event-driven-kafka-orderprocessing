@@ -1,0 +1,52 @@
+spring:
+  kafka:
+    bootstrap-servers: ${spring.embedded.kafka.brokers}
+
+    admin:
+      fail-fast: false
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+      properties:
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
+        spring.json.add.type.headers: false   # must match — consumer ignores headers
+
+    consumer:
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+
+    listener:
+      ack-mode: manual_immediate
+      type: single
+
+app:
+  kafka:
+    topics:
+      order-placed: order.placed
+      payment-result: payment.result
+      inventory-result: inventory.result
+      shipping-result: shipping.result
+      order-confirmed: order.confirmed
+      order-failed: order.failed
+      compensation: order.compensation
+      order-placed-dlt: order.placed.DLT
+      payment-result-dlt: payment.result.DLT
+      inventory-result-dlt: inventory.result.DLT
+      shipping-result-dlt: shipping.result.DLT
+  notification:
+    sla-minutes: 5
+    scheduler-interval: 30000
+
+server:
+  port: 0
+
+logging:
+  level:
+    root: WARN
+    com.example.DistributedKafkaOrderProcessing: INFO
+    org.springframework.kafka: WARN
+    org.apache.kafka: WARN

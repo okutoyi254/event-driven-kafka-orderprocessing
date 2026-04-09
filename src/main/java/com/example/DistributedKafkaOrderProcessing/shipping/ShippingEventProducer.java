@@ -21,34 +21,23 @@ public class ShippingEventProducer {
     }
 
     public void publishShippingResult(Events.ShippingResultEvent event){
-
-        kafkaTemplate.send(topics.shippingResult(),event.orderId(),event)
-                .whenComplete((result,ex)->{
-                    if(ex !=null){
-                        log.error("Failed to publish ShippingResultEvent: orderId={}",
-                                event.orderId(),ex);
-                    } else{
-                        log.error("ShippingResultEvent published: orderId={} status={} ->partition={}",
-                                event.orderId(),event.status(),result.getRecordMetadata().partition());
-                    }
-                });
+        try {
+            var result = kafkaTemplate.send(topics.shippingResult(), event.orderId(), event).get();
+            log.info("ShippingResultEvent published: orderId={} status={} ->partition={}",
+                    event.orderId(), event.status(), result.getRecordMetadata().partition());
+        } catch (Exception ex) {
+            log.error("Failed to publish ShippingResultEvent: orderId={}", event.orderId(), ex);
+        }
     }
 
     public void publishCompensation(Events.CompensationEvent event){
-
-        kafkaTemplate.send(topics.compensation(),event.orderId(),event)
-                .whenComplete((result,ex)->
-                {
-                    if(ex !=null){
-                    log.error("Failed to publish CompensationEvent: orderId={}",
-                            event.orderId(), ex);
-                } else {
-            log.info("CompensationEvent published: orderId={} stage={} " +
-                            "refund={} releaseInventory={}",
-                    event.orderId(), event.failureStage(),
-                    event.refundRequired(), event.inventoryReleaseRequired());
+        try {
+            var result = kafkaTemplate.send(topics.compensation(), event.orderId(), event).get();
+            log.info("CompensationEvent published: orderId={} stage={} refund={} releaseInventory={}",
+                    event.orderId(), event.failureStage(), event.refundRequired(), event.inventoryReleaseRequired());
+        } catch (Exception ex) {
+            log.error("Failed to publish CompensationEvent: orderId={}", event.orderId(), ex);
         }
-    });
 
     }
 }
