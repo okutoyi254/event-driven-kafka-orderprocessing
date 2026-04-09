@@ -26,12 +26,9 @@ spring:
     bootstrap-servers: localhost:29092
 
     admin:
-      properties:
-        request.timeout.ms: 30000
-        retry.backoff.ms: 1000
-        retries: 10
-      fail-fast: false   # don't crash on startup if Kafka not yet ready
+      fail-fast: false
 
+    # ── Producer ─────────────────────────────────────────────────────────────
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -43,26 +40,24 @@ spring:
         linger.ms: 5
         batch.size: 16384
         compression.type: snappy
-        spring.json.add.type.headers: true
+        # Do NOT add type headers — we disable header-based deserialization
+        # on the consumer side, so headers just cause confusion
+        spring.json.add.type.headers: false
 
+    # ── Consumer ─────────────────────────────────────────────────────────────
+    # Minimal config here — deserialization is handled explicitly in
+    # KafkaConsumerConfig.java which creates the ConsumerFactory bean.
+    # Only group-id and offset reset needed here.
     consumer:
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       auto-offset-reset: earliest
       enable-auto-commit: false
-      properties:
-        spring.json.trusted.packages: "*"
-        spring.json.use.type.headers: true
-        max.poll.records: 10
-        max.poll.interval.ms: 300000
 
+    # ── Listener ─────────────────────────────────────────────────────────────
     listener:
-      ack-mode: manual_immediate   # commit immediately after ack.acknowledge()
-      type: single                 # one record per listener invocation
-      # auto-startup NOT set here — defaults to true (consumers start normally)
+      ack-mode: manual_immediate
+      type: single
 
 # ── Topic Names ───────────────────────────────────────────────────────────────
-# Single app: block — duplicate keys in YAML silently overwrite each other
 app:
   kafka:
     topics:
@@ -81,17 +76,14 @@ app:
     sla-minutes: 5
     scheduler-interval: 30000
 
-# ── API Docs ──────────────────────────────────────────────────────────────────
 springdoc:
   swagger-ui:
     path: /swagger-ui/index.html
     operationsSorter: alpha
 
-# ── Server ────────────────────────────────────────────────────────────────────
 server:
   port: 8082
 
-# ── Actuator ─────────────────────────────────────────────────────────────────
 management:
   endpoints:
     web:
@@ -101,7 +93,6 @@ management:
     health:
       show-details: always
 
-# ── Logging ───────────────────────────────────────────────────────────────────
 logging:
   level:
     root: INFO
